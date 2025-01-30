@@ -23,7 +23,7 @@ public class CommentService {
         Comment comment = commentRepository.save(
                 Comment.create(
                         snowflake.nextId(),
-                        parent.getContent(),
+                        request.getContent(),
                         parent == null ? null : parent.getCommentId(),
                         request.getArticleId(),
                         request.getWriterId()
@@ -49,20 +49,6 @@ public class CommentService {
                 });
     }
 
-    private boolean hasChildren(Comment comment) {
-        return commentRepository.countBy(comment.getArticleId(),comment.getCommentId(),2L) == 2;
-    }
-
-    private void delete(Comment comment){
-        commentRepository.delete(comment);
-        if(!comment.isRoot()){
-            commentRepository.findById(comment.getParentCommentId())
-                    .filter(Comment::getDeleted)
-                    .filter(not(this::hasChildren))
-                    .ifPresent(this::delete);
-        }
-    }
-
 
     private Comment findParent(CommentCreateRequest request){
         Long parentCommentId = request.getParentCommentId();
@@ -74,5 +60,19 @@ public class CommentService {
                 .filter(not(Comment::getDeleted))
                 .filter(Comment::isRoot)
                 .orElseThrow();
+    }
+
+    private boolean hasChildren(Comment comment) {
+        return commentRepository.countBy(comment.getArticleId(),comment.getCommentId(),2L) == 2;
+    }
+
+    private void delete(Comment comment){
+        commentRepository.delete(comment); // 현재 댓글 삭제
+        if(!comment.isRoot()){ // 현재 댓글이 루트 댓글이 아닌 경우
+            commentRepository.findById(comment.getParentCommentId()) // 부모 댓글 조회
+                    .filter(Comment::getDeleted) // 부모 댓글이 삭제된 상태인지 확인
+                    .filter(not(this::hasChildren)) // 부모 댓글이 자식 댓글이 없는지 확인
+                    .ifPresent(this::delete); // 부모 댓글 삭제(재귀호출)
+        }
     }
 }
