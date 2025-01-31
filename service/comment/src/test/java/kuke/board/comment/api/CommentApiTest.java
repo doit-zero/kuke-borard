@@ -22,6 +22,17 @@ public class CommentApiTest {
         System.out.println("\tcommentId=%s".formatted(response3.getParentCommentId()));
     }
 
+    @Test
+    void read(){
+        CommentResponse response = restClient.get()
+                .uri("/v1/comments/{commentId}", 143191383827804160L)
+                .retrieve()
+                .body(CommentResponse.class);
+        System.out.println("response : " +response);
+    }
+
+
+
 
     CommentResponse createComment(CommentCreateRequest request){
         return restClient.post()
