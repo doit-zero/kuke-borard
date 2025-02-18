@@ -42,8 +42,10 @@ public class CommentService {
     @Transactional
     public void delete(Long commentId){
         commentRepository.findById(commentId)
+                // 삭제 된 상태가 아니면 false값이므로 필터 통고
                 .filter(not(Comment::getDeleted))
                 .ifPresent(comment -> {
+                    // 다른 자식 댓글이 있다면
                     if(hasChildren(comment)){
                         comment.delete();
                     } else {

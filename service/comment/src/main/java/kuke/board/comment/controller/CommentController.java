@@ -31,18 +31,18 @@ public class CommentController {
 
     @GetMapping("/v1/comments")
     public CommentPageResponse readAll(
-            @PathVariable("articleId") Long articleId,
-            @PathVariable("page") Long page,
-            @PathVariable("pageSize") Long pageSize){
+            @RequestParam("articleId") Long articleId,
+            @RequestParam("page") Long page,
+            @RequestParam("pageSize") Long pageSize){
         return commentService.readAll(articleId,page,pageSize);
     }
 
     @GetMapping("/v1/comments/infinite-scroll")
     public List<CommentResponse> readAll(
-            @PathVariable("articleId") Long articleId,
-            @PathVariable("lastParentCommentId") Long lastParentCommentId,
-            @PathVariable("lastCommentId") Long lastCommentId,
-            @PathVariable("pageSize") Long pageSize){
+            @RequestParam("articleId") Long articleId,
+            @RequestParam(value = "lastParentCommentId",required = false) Long lastParentCommentId,
+            @RequestParam(value = "lastCommentId", required = false) Long lastCommentId,
+            @RequestParam("pageSize") Long pageSize){
         return commentService.readAll(articleId,lastParentCommentId,lastCommentId,pageSize);
     }
 

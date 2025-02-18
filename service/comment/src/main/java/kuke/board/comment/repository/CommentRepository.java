@@ -26,7 +26,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
             value = "select comment.comment_id,comment.content,comment.parent_comment_id,comment.article_id, " +
                     "comment.writer_id,comment.deleted,comment.created_at " +
                     "from (" +
-                    " select comment_id from comment where article_id :articleId " +
+                    " select comment_id from comment where article_id = :articleId " +
                     " order by parent_comment_id asc,comment_id asc " +
                     " limit :limit offset :offset " +
                     ") t left join comment on t.comment_id = comment.comment_id",
@@ -48,9 +48,9 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     Long count(@Param("articleId") Long articleId,
                @Param("limit") Long limit);
     @Query(
-            value = "select comment.comment_id,comment.content,comment.parent_comment_id,comment.article_id, " +
-                    "comment.writer_id,comment.deleted,comment.created_at" +
-                    "from comment " +
+            value = "select comment.comment_id, comment.content, comment.parent_comment_id, comment.article_id, " +
+                    "comment.writer_id, comment.deleted, comment.created_at " +  // 공백 추가
+                    "from comment " +  // 공백 추가
                     "where article_id = :articleId " +
                     "order by parent_comment_id asc, comment_id asc " +
                     "limit :limit",
@@ -61,9 +61,10 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
             @Param("limit") Long limit
     );
 
+
     @Query(
             value = "select comment.comment_id,comment.content,comment.parent_comment_id,comment.article_id, " +
-                    "comment.writer_id,comment.deleted,comment.created_at" +
+                    "comment.writer_id,comment.deleted,comment.created_at " +
                     "from comment " +
                     "where article_id = :articleId and (" +
                     " parent_comment_id > :lastParentCommentId or" +
