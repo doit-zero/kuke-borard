@@ -45,7 +45,8 @@ public class ArticleService {
 
     public ArticlePageResponse readAll(Long boardId,Long page,Long pageSize){
         return ArticlePageResponse.of(
-                articleRepository.findAll(boardId,(page -1) * pageSize,pageSize).stream()
+                articleRepository.findAll(boardId,(page -1) * pageSize,pageSize)
+                        .stream()
                         .map(ArticleResponse::from)
                         .toList(),
                 articleRepository.count(
