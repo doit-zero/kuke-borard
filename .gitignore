@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+service/like/src/main/resources/application.yml
+service/like/src/main/resources/application.yml
+*.yml

@@ -52,4 +52,11 @@ public class ArticleController {
     public void delete(@PathVariable Long articleId){
         articleService.delete(articleId);
     }
+
+    @GetMapping("/v1/articles/{boardId}/count")
+    public Long count(@PathVariable Long boardId){
+        return articleService.count(boardId);
+    }
+
+
 }
